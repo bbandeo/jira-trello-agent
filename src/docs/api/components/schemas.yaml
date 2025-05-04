@@ -1,0 +1,218 @@
+# docs/api/components/schemas.yaml
+components:
+  schemas:
+    # Configuration Schemas
+    JiraConfig:
+      type: object
+      required:
+        - domain
+        - email
+        - apiToken
+        - projectKey
+      properties:
+        domain:
+          type: string
+          description: Jira domain
+          example: "company.atlassian.net"
+        email:
+          type: string
+          format: email
+          description: Jira user email
+        apiToken:
+          type: string
+          description: Jira API token
+        projectKey:
+          type: string
+          description: Jira project key
+          example: "PROJ"
+
+    TrelloConfig:
+      type: object
+      required:
+        - apiKey
+        - apiToken
+        - boardId
+      properties:
+        apiKey:
+          type: string
+          description: Trello API key
+        apiToken:
+          type: string
+          description: Trello token
+        boardId:
+          type: string
+          description: Trello board ID
+
+    SyncConfig:
+      type: object
+      required:
+        - jiraConfig
+        - trelloConfig
+      properties:
+        jiraConfig:
+          $ref: '#/components/schemas/JiraConfig'
+        trelloConfig:
+          $ref: '#/components/schemas/TrelloConfig'
+        syncFrequency:
+          type: string
+          enum: [manual, daily, hourly]
+          default: daily
+        syncDirection:
+          type: string
+          enum: [jira_to_trello, trello_to_jira, bidirectional]
+          default: jira_to_trello
+        fieldMappings:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldMapping'
+        statusMappings:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusMapping'
+
+    FieldMapping:
+      type: object
+      properties:
+        jiraField:
+          type: string
+          example: "summary"
+        trelloField:
+          type: string
+          example: "name"
+
+    StatusMapping:
+      type: object
+      properties:
+        jiraStatus:
+          type: string
+          example: "In Progress"
+        trelloStatus:
+          type: string
+          example: "Doing"
+
+    # Task Schema
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        jiraId:
+          type: string
+        trelloId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+        syncStatus:
+          type: string
+          enum: [pending, synced, error]
+        syncDirection:
+          type: string
+          enum: [jira_to_trello, trello_to_jira]
+        errorMessage:
+          type: string
+        lastSyncedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    # Sync Schema
+    SyncResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        tasksSynced:
+          type: integer
+        tasksErrored:
+          type: integer
+        errorMessages:
+          type: array
+          items:
+            type: string
+        duration:
+          type: integer
+          description: Duration in milliseconds
+
+    SyncHistory:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        syncType:
+          type: string
+          enum: [manual, automatic]
+        syncDirection:
+          type: string
+          enum: [jira_to_trello, trello_to_jira]
+        status:
+          type: string
+          enum: [success, partial, failed]
+        tasksSynced:
+          type: integer
+        tasksErrored:
+          type: integer
+        errorMessages:
+          type: array
+          items:
+            type: string
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        duration:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    # Command Schemas
+    CommandRequest:
+      type: object
+      required:
+        - command
+      properties:
+        command:
+          type: string
+          description: Natural language command
+          examples:
+            - "sync now"
+            - "sincronizar ahora"
+            - "show status"
+            - "list pending tasks"
+
+    CommandResponse:
+      type: object
+      properties:
+        response:
+          type: string
+        action:
+          type: string
+        result:
+          type: object
+
+    # Error Schemas
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+        errorCode:
+          type: string
+        details:
+          type: string
+        timestamp:
+          type: string
+          format: date-time

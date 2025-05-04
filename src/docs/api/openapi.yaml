@@ -1,0 +1,40 @@
+# docs/api/openapi.yaml
+openapi: 3.0.0
+info:
+  title: Jira-Trello Agent API
+  version: 1.0.0
+  description: API for the Jira-Trello synchronization agent with natural language command support.
+  contact:
+    name: API Support
+    email: support@example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+  - url: https://api.production.com
+    description: Production server
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-user-id
+      
+security:
+  - ApiKeyAuth: []
+
+paths: {}
+
+# Referencias a archivos externos
+$refs:
+  schemas: './components/schemas.yaml'
+  responses: './components/responses.yaml'
+  parameters: './components/parameters.yaml'
+  routes:
+    config: './routes/config.yaml'
+    sync: './routes/sync.yaml'
+    commands: './routes/commands.yaml'

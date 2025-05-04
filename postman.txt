@@ -1,0 +1,24 @@
+1. Health Check
+
+GET http://localhost:3000/api/health
+
+
+2. Get Config (requiere header x-user-id)
+
+GET http://localhost:3000/api/config
+Headers: x-user-id: test-user
+
+
+3. Test Connection (requiere config)
+
+POST http://localhost:3000/api/config/test-connection
+Headers: x-user-id: test-user
+
+
+4. Execute Command
+
+POST http://localhost:3000/api/commands/execute
+Headers: x-user-id: test-user
+Body:{
+  "command": "show status"
+}

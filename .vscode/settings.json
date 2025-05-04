@@ -1,0 +1,17 @@
+{
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "name": "comment",
+                "scope": [
+                    "comment",
+                    "punctuation.definition.comment"
+                ],
+                "settings": {
+                    "fontStyle": "italic"
+                }
+            }
+        ],
+        "comments": ""
+    }
+}
